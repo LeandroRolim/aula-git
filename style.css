@@ -1,0 +1,17 @@
+.page {
+    width: 1000px;
+}
+.col {
+    float: left;
+    box-sizing: border-box;
+    padding: 20px;
+}
+.left {
+    width: 30%;
+    background-color: darkslategrey;
+    color: white;
+}
+
+.right {
+    width: 70%;
+}
