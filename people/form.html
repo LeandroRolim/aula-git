@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de pessoas</title>
+</head>
+
+<body>
+    <div id="app">
+        <form>
+            Nome:
+            <input type="text" v-model="name" required>
+            <br>
+            E-mail:
+            <input type="email" v-model="email" required>
+            <br>
+            <button type="button" @click="limpar">Limpar</button>
+            <button type="button" @click="gravar">Gravar</button>
+        </form>
+        <table>
+            <tr>
+                <th>nome</th>
+                <th>email</th>
+            </tr>
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ email }}</td>
+            </tr>
+        </table>
+    </div>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                name: 'teste',
+                email: ''
+            },
+            methods: {
+                limpar: function () {
+                    this.email = '';
+                    this.name = '';
+                },
+                gravar: function () {
+                    axios.post('http://127.0.0.1:8000/api/people', {
+                        name: this.name,
+                        email: this.email,
+                    })
+                        .then(function () {
+                            alert('Pessoa gravada!')
+                        })
+                        .catch(function () {
+                            alert('Erro ao gravar dados.')
+                        });
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>
