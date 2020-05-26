@@ -3,31 +3,48 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Cadastro de pessoas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 
 <body>
-    <div id="app">
-        <form>
-            Nome:
-            <input type="text" v-model="name" required>
-            <br>
-            E-mail:
-            <input type="email" v-model="email" required>
-            <br>
-            <button type="button" @click="limpar">Limpar</button>
-            <button type="button" @click="gravar">Gravar</button>
-        </form>
-        <table>
-            <tr>
-                <th>nome</th>
-                <th>email</th>
-            </tr>
-            <tr>
-                <td>{{ name }}</td>
-                <td>{{ email }}</td>
-            </tr>
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-6 col-sm-offset-3">
+                <form>
+                    <div class="form-group">
+                        <label for="name">Nome:</label>
+                        <input class="form-control" type="text" id="name" v-model="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail:</label>
+                        <input class="form-control" type="email" id="email" v-model="email" required>
+                    </div>
+
+                    <button class="btn btn-danger" type="button" @click="limpar">Limpar</button>
+                    <button class="btn btn-primary" type="button" @click="gravar">Gravar</button>
+                </form>
+            </div>
+        </div>
+
+        <br>
+        <h1>Pessoas cadastradas</h1>
+        <button class="btn btn-default" @click="carregar">Atualizar</button>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="person in people">
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.email }}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
     <!-- development version, includes helpful console warnings -->
@@ -37,6 +54,7 @@
         new Vue({
             el: '#app',
             data: {
+                people: [],
                 name: 'teste',
                 email: ''
             },
@@ -50,12 +68,23 @@
                         name: this.name,
                         email: this.email,
                     })
-                        .then(function () {
+                        .then((response) => {
+                            this.people.push(response.data);
                             alert('Pessoa gravada!')
                         })
                         .catch(function () {
                             alert('Erro ao gravar dados.')
                         });
+                },
+                carregar: function () {
+                    axios.get('http://127.0.0.1:8000/api/people')
+                        .then((response) => {
+                            this.people = response.data;
+                            console.log(response.data);
+                        })
+                        .catch(function () {
+                            alert('Erro ao carregar dados');
+                        })
                 }
             }
         })
